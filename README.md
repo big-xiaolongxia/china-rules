@@ -1,6 +1,6 @@
 # China Rules
 
-自动合并 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat)、[Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)、[blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script) 三源的中国大陆域名/IP 规则集，去重后发布。
+自动合并 **4 个 domain 源 + 4 个 IP 源** 的中国大陆域名/IP 规则集，去重后通过 GitHub Release 发布。
 
 ## 下载
 
@@ -13,19 +13,28 @@ https://github.com/<你的用户名>/china-rules/releases/latest/download/ChinaI
 
 ## 规则来源
 
-### Domain（三源合并）
-| 源 | 文件 | 条目 |
-|----|------|:----:|
-| MetaCubeX | geo/geosite/cn.yaml | ~111K |
-| Loyalsoldier | direct.txt | ~112K |
-| blackmatrix7 | ChinaTest_Domain.txt | ~112K |
+### Domain（4 源合并）
 
-### IPCIDR（三源合并）
-| 源 | 文件 | 条目 |
-|----|------|:----:|
-| MetaCubeX | geo/geoip/cn.yaml | ~5.8K |
-| Loyalsoldier | cncidr.txt | ~5.7K |
-| blackmatrix7 | ChinaMax_IP.txt | ~6K |
+| 源 | 获取方式 | 说明 |
+|----|---------|------|
+| **v2dat 提取 geosite:cn** | `geosite.dat` → v2dat unpack | 含 `12306.cn` 等 v2fly 原始条目 |
+| **MetaCubeX** | `geo/geosite/cn.yaml` | v2fly 编译版 YAML |
+| **Loyalsoldier** | `direct.txt` | 112K 条商业域名 |
+| **blackmatrix7** | `ChinaTest_Domain.txt` | 112K 条显式域名 |
+
+### IPCIDR（4 源合并）
+
+| 源 | 获取方式 |
+|----|---------|
+| **v2dat 提取 geoip:cn** | `geoip.dat` → v2dat unpack |
+| **MetaCubeX** | `geo/geoip/cn.yaml` |
+| **Loyalsoldier** | `cncidr.txt` |
+| **blackmatrix7** | `ChinaMax_IP.txt` |
+
+## Domain 输出格式
+
+- `+.example.com` → DOMAIN-SUFFIX（匹配域名及所有子域名）
+- `example.com` → DOMAIN 精确匹配（来自 v2dat `full:` 规则，仅此域名不含子域名）
 
 ## 更新
 
