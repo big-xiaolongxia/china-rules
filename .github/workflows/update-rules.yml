@@ -1,0 +1,69 @@
+name: Update China Rules
+
+on:
+  schedule:
+    # Sunday 14:00 UTC = Sunday 22:00 Beijing
+    - cron: "0 14 * * 0"
+  workflow_dispatch:  # allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Download mihomo binary
+        run: |
+          echo "Fetching latest mihomo release..."
+          API_URL="https://api.github.com/repos/MetaCubeX/mihomo/releases/latest"
+          DOWNLOAD_URL=$(curl -sL "$API_URL" | \
+            python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          for a in d.get('assets', []):
+              name = a['name']
+              if 'linux-amd64-compatible' in name and name.endswith('.gz'):
+                  print(a['browser_download_url'])
+                  break
+          ")
+          echo "Downloading: $DOWNLOAD_URL"
+          curl -fL -o mihomo.gz "$DOWNLOAD_URL"
+          gunzip mihomo.gz
+          chmod +x mihomo
+          ./mihomo version || true
+
+      - name: Merge rules
+        run: python scripts/merge_rules.py
+
+      - name: Create or update Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          TAG="rules"
+
+          # Check if release exists
+          if gh release view "$TAG" --json tagName &>/dev/null; then
+            echo "Release '$TAG' exists, updating..."
+            gh release upload "$TAG" output/*.yaml output/*.mrs --clobber
+          else
+            echo "Release '$TAG' does not exist, creating..."
+            gh release create "$TAG" output/*.yaml output/*.mrs \
+              --title "rules" \
+              --notes "China domain/IP rules. Updated on $(date -u '+%Y-%m-%d %H:%M UTC')"
+          fi
+
+      - name: Cleanup
+        run: rm -rf tmp output mihomo

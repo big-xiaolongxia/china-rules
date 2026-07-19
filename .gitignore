@@ -1,0 +1,7 @@
+# Temporary build artifacts
+tmp/
+output/
+mihomo
+mihomo.gz
+__pycache__/
+*.pyc
