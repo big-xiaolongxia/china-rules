@@ -83,11 +83,11 @@ def download(url, path):
     print(f"    -> {os.path.getsize(path)} bytes")
 
 
-def get_source_path(src):
+def get_source_path(src, prefix=""):
     """Get the local file path for a source (url or local path)."""
     if "path" in src:
         return src["path"]
-    tmp_name = "source_" + src["name"] + ".tmp"
+    tmp_name = prefix + "source_" + src['name'] + ".tmp"
     tmp_path = os.path.join(TMP_DIR, tmp_name)
     download(src["url"], tmp_path)
     return tmp_path
@@ -225,7 +225,7 @@ def collect_domains():
 
     for src in DOMAIN_SOURCES:
         print(f"\n  [{src['name']}]")
-        filepath = get_source_path(src)
+        filepath = get_source_path(src, "domain_")
         src_type = src["type"]
 
         if src_type == "v2dat-domain":
@@ -261,7 +261,7 @@ def collect_ips():
 
     for src in IP_SOURCES:
         print(f"\n  [{src['name']}]")
-        filepath = get_source_path(src)
+        filepath = get_source_path(src, "ip_")
         src_type = src["type"]
 
         if src_type == "yaml-payload":
