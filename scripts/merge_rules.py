@@ -191,10 +191,10 @@ def normalize_domain_entry(entry):
         bare = s[2:]
         return (bare, s)
 
-    # Dot prefix only (from yaml sources)
+    # Dot prefix only (from yaml sources) → convert to +. for mihomo
     if s.startswith("."):
         bare = s[1:]
-        return (bare, s)
+        return (bare, "+." + bare)
 
     # Bare domain (from plain-domain sources)
     return (s, "+." + s)
