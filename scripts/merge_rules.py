@@ -308,7 +308,7 @@ def compile_mrs(yaml_path, behavior, output_path):
         print(f"  [SKIP] mihomo not found at {MIHOMO_BIN}")
         return False
 
-    cmd = [MIHOMO_BIN, "convert-ruleset", behavior, yaml_path, output_path]
+    cmd = [MIHOMO_BIN, "convert-ruleset", behavior, "yaml", yaml_path, output_path]
     print(f"  running: {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
