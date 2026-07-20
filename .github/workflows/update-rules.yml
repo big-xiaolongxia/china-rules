@@ -39,7 +39,7 @@ jobs:
           curl -fL -o mihomo.gz "$DOWNLOAD_URL"
           gunzip mihomo.gz
           chmod +x mihomo
-          ./mihomo version || true
+          ./mihomo -v
 
       - name: Download v2dat binary
         run: |
